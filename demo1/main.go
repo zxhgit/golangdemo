@@ -43,7 +43,11 @@ func main() {
 	//sliceTest2()
 	//sliceTest3()
 	//sliceTest4()
-	sliceTest5()
+	//sliceTest5()
+
+	//methodsTest()
+	//methodsTest1()
+	methodsTest2()
 }
 
 func add(x,y int) int {
@@ -337,4 +341,141 @@ func sliceTest5()  {
 	// we can add more than one element at a time.
 	a = append(a, 2, 3, 4)
 	printSlice("a", a)
+}
+
+func rangeTest()  {
+	var pow = []int{1, 2, 4, 8, 16, 32, 64, 128}
+	for i, v := range pow {
+		fmt.Printf("2**%d = %d\n", i, v)
+	}
+}
+
+func rangeTest1()  {
+	pow := make([]int, 10)
+	for i := range pow {
+		pow[i] = 1 << uint(i)
+	}
+	for _, value := range pow {
+		fmt.Printf("%d\n", value)
+	}
+}
+
+func mapsTest()  {
+	type Vertex struct {
+		Lat, Long float64
+	}
+	var m map[string]Vertex
+	m = make(map[string]Vertex)
+	m["Bell Labs"] = Vertex{
+		40.68433, -74.39967,
+	}
+	fmt.Println(m["Bell Labs"])
+}
+
+func mapsTest1()  {
+	type Vertex struct {
+		Lat, Long float64
+	}
+	var m = map[string]Vertex{
+		"Bell Labs": Vertex{
+			40.68433, -74.39967,
+		},
+		"Google": Vertex{
+			37.42202, -122.08408,
+		},
+	}
+	fmt.Println(m)
+}
+
+func mapsTest2()  {
+	type Vertex struct {
+		Lat, Long float64
+	}
+	var m = map[string]Vertex{
+		"Bell Labs": {40.68433, -74.39967},
+		"Google":    {37.42202, -122.08408},
+	}
+	fmt.Println(m)
+}
+
+func mapsTest3()  {
+	m := make(map[string]int)
+
+	m["Answer"] = 42
+	fmt.Println("The value:", m["Answer"])
+
+	m["Answer"] = 48
+	fmt.Println("The value:", m["Answer"])
+
+	//delete(m, "Answer")
+	fmt.Println("The value:", m["Answer"])
+
+	v, ok := m["Answer"]
+	fmt.Println("The value:", v, "Present?", ok)
+}
+
+func functionValues()  {
+	hypot := func(x, y float64) float64 {
+		return math.Sqrt(x*x + y*y)
+	}
+	fmt.Println(hypot(3, 4))
+}
+
+func adder() func(int) int {
+	sum := 0
+	return func(x int) int {
+		sum += x
+		return sum
+	}
+}
+func functionClosures()  {
+	pos, neg := adder(), adder()
+	for i := 0; i < 10; i++ {
+		fmt.Println(
+			pos(i),
+			neg(-2*i),
+		)
+	}
+}
+
+type Vertex1 struct {
+	X, Y float64
+}
+func (v *Vertex1) Abs() float64 {
+	return math.Sqrt(v.X*v.X + v.Y*v.Y)
+}
+func methodsTest()  {
+	v := &Vertex1{3, 4}
+	fmt.Println(v.Abs())
+}
+
+type MyFloat float64
+func (f MyFloat) Abs() float64 {
+	if f < 0 {
+		return float64(-f)
+	}
+	return float64(f)
+}
+func methodsTest1()  {
+	f := MyFloat(-math.Sqrt2)
+	fmt.Println(f.Abs())
+}
+
+func (v *Vertex1) Scale(f float64) {
+	v.X = v.X * f
+	v.Y = v.Y * f
+}
+func (v Vertex1) Scale1(f float64) {
+	//当 v 是一个值（非指针），方法看到的是 Vertex 的副本，并且无法修改原始值
+	v.X = v.X * f
+	v.Y = v.Y * f
+}
+func (v *Vertex1) Abs1() float64 {
+	return math.Sqrt(v.X*v.X + v.Y*v.Y)
+}
+func methodsTest2() {
+	v := &Vertex1{3, 4}
+	//v.Scale(5)
+	v.Scale1(5)
+	fmt.Println(v, v.Abs1())
 }
