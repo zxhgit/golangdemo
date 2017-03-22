@@ -7,6 +7,8 @@ import (
 	"math"
 	"runtime"
 	"time"
+	"strings"
+	"io"
 )
 
 func main() {
@@ -47,7 +49,10 @@ func main() {
 
 	//methodsTest()
 	//methodsTest1()
-	methodsTest2()
+	//methodsTest2()
+	//stringTest()
+	//errorTest()
+	readerTest()
 }
 
 func add(x,y int) int {
@@ -478,4 +483,52 @@ func methodsTest2() {
 	//v.Scale(5)
 	v.Scale1(5)
 	fmt.Println(v, v.Abs1())
+}
+
+
+type Person struct {
+	Name string
+	Age  int
+}
+func (p Person) String() string {
+	return fmt.Sprintf("%v (%v years)", p.Name, p.Age)
+}
+func stringTest()  {
+	a := Person{"Arthur Dent", 42}
+	z := Person{"Zaphod Beeblebrox", 9001}
+	fmt.Println(a, z)
+}
+
+
+type MyError struct {
+	When time.Time
+	What string
+}
+func (e *MyError) Error() string {
+	return fmt.Sprintf("at %v, %s",
+		e.When, e.What)
+}
+func run() error {
+	return &MyError{
+		time.Now(),
+		"it didn't work",
+	}
+}
+func errorTest()  {
+	if err := run(); err != nil {
+		fmt.Println(err)
+	}
+}
+
+func readerTest()  {
+	r := strings.NewReader("Hello, Reader!")
+	b := make([]byte, 8)
+	for {
+		n, err := r.Read(b)
+		fmt.Printf("n = %v err = %v b = %v\n", n, err, b)
+		fmt.Printf("b[:n] = %q\n", b[:n])
+		if err == io.EOF {
+			break
+		}
+	}
 }
